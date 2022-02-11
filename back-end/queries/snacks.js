@@ -18,9 +18,9 @@ const db = require("../db/dbConfig.js");
         }
 }
 
-    const createdSnack = async(snack) => {
+    const createSnack = async(snack) => {
         try{
-            const newSnack = await db,one(
+            const newSnack = await db.one(
                 "INSERT INTO snacks (name, fiber, protein, added_sugar, is_healthy, image) VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *",
                 [snack.name, snack.fiber, snack.protein, snack.added_sugar, snack.is_healthy, snack.image]
             )
@@ -58,7 +58,7 @@ const db = require("../db/dbConfig.js");
 module.exports = { 
     getAllSnacks,
     getSnack,
-    createdSnack,
+    createSnack,
     deleteSnack,
     updateSnack
 };
