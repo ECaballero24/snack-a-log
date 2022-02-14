@@ -1,17 +1,35 @@
 const express = require("express");
 const snacks = express.Router();
 
-const { getAllSnacks, getSnack, createSnack, deleteSnack, updateSnack }= require("../queries/snacks.js");
+const { getAllSnacks, getSnack, createSnack, deleteSnack, updateSnack}= require("../queries/snacks.js");
+
+
+// snacks.get("/", async (req, res) => {
+//   const allSnacks = await getAllSnacks();
+//   const snackTest = {success: true, payload:allSnacks}
+//   if (allSnacks[0]) {
+//     res.status(200).json(snackTest);
+//   } else {
+//     res.status(500).json({ error: "server error" });
+//   }
+// });
 
 
 snacks.get("/", async (req, res) => {
-  const allSnacks = await getAllSnacks();
-  if (allSnacks[0]) {
-    res.status(200).json(allSnacks);
-  } else {
-    res.status(500).json({ error: "server error" });
+  try {
+    const allSnacks = await getAllSnacks();
+    // const snackTest = {success: true, payload:allSnacks};
+    if (allSnacks[0]) {
+      res.status(200).json({success: true, payload:allSnacks});
+    } else {
+      res.status(500).json({ error: "server error" });
+    }
+  } catch (error) {
+    return error;
   }
 });
+
+
 
 
 snacks.get("/:id", async (req, res)=>{
@@ -19,14 +37,32 @@ snacks.get("/:id", async (req, res)=>{
     try{
         const snack = await getSnack(id);
         if(snack.id){
-            res.status(200).json(snack);
+            res.status(200).json({
+                "success":true,
+                "payload":snack
+});
         } else {
-            res.status(500).json({error: " Snack was not found in the db"});
+            res.status(404).json({
+                success: false , 
+                payload: "not found"
+            });
         }
     } catch(err){
         console.log(err);
     }
 })
+
+// snacks.get("/:id", async (req, res)=>{
+//     const { id } = req.params;
+//     try{
+//         const snackId = await getSnackId
+//         if(snackId.id){
+//             res.status(200).json()
+//         }
+//     }
+// })
+
+
 
 snacks.post("/", async (req, res)=>{
     const { body } = req;
@@ -51,9 +87,14 @@ snacks.delete("/:id", async(req, res)=>{
     const { id } = req.params;
     const deletedSnack = await deleteSnack(id);
     if(deletedSnack.id){
-        res.status(200).json(deletedSnack);
+        res.status(200).json({
+                "success":true,
+                "payload":deletedSnack});
     } else {
-        res.status(404).json({error: "Error"});
+        res.status(404).json({
+            success: false , 
+            payload: "not found"
+        });
     }
 })
 
