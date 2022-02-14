@@ -80,7 +80,7 @@ snacks.post("/", async (req, res)=>{
         if(createdSnack.name && !createdSnack.image){
             res.status(200).json({
                 "success":true,
-                "payload": createdSnack
+                "payload": createdSnack 
         
             });
         }
