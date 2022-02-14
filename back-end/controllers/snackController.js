@@ -13,15 +13,20 @@ snacks.get("/", async (req, res) => {
   }
 });
 
-
 snacks.get("/:id", async (req, res)=>{
     const { id } = req.params;
     try{
         const snack = await getSnack(id);
         if(snack.id){
-            res.status(200).json(snack);
+            res.status(200).json({
+                "success":true,
+                "payload":snack
+            });
         } else {
-            res.status(500).json({error: " Snack was not found in the db"});
+            res.status(404).json({
+                "success": false,
+                "payload": "not found"
+            });
         }
     } catch(err){
         console.log(err);
@@ -34,7 +39,10 @@ snacks.post("/", async (req, res)=>{
     try{
         const createdSnack = await createSnack(body);
         if(createdSnack.name && createdSnack.image){
-            res.status(200).json(createdSnack);
+            res.status(200).json({
+                "success":true,
+                "payload":createdSnack
+            });
         } else if(!createdSnack.name){
             res.status(422).json({error: "Must include name in field"});
         } else if(createdSnack.name && !createdSnack.image){
@@ -45,15 +53,19 @@ snacks.post("/", async (req, res)=>{
     }
 })
 
-
-
 snacks.delete("/:id", async(req, res)=>{
     const { id } = req.params;
     const deletedSnack = await deleteSnack(id);
     if(deletedSnack.id){
-        res.status(200).json(deletedSnack);
+        res.status(200).json({
+            "success":true,
+            "payload": deletedSnack
+        });
     } else {
-        res.status(404).json({error: "Error"});
+        res.status(404).json({
+            "success": false,
+            "payload": "not found"
+        });
     }
 })
 

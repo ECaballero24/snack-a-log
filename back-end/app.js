@@ -1,19 +1,19 @@
 // DEPENDENCIES
 const express = require("express");
 const app = express();
-const snackController = ("./controllers/snackController.js")
-const cors = require("cors")
+const snackController = require("./controllers/snackController.js")
+const cors = require("cors");
 // CONFIGURATION
 
 // MIDDLEWARE
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 require("dotenv").config();
 
 // ROUTES
 app.get("/", (req, res)=>{
-    res.send("<h1>Get Snack'n at Snack-a-log!</h1>");
+    res.send("Get Snack'n at Snack-a-log!");
 })
 
 app.use("/snacks", snackController);
