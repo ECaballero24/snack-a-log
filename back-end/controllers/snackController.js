@@ -5,12 +5,19 @@ const { getAllSnacks, getSnack, createSnack, deleteSnack, updateSnack }= require
 
 
 snacks.get("/", async (req, res) => {
-  const allSnacks = await getAllSnacks();
-  if (allSnacks[0]) {
-    res.status(200).json(allSnacks);
-  } else {
-    res.status(500).json({ error: "server error" });
-  }
+    try{
+        const allSnacks = await getAllSnacks()
+        if (allSnacks[0]) {
+          res.status(200).json({
+              "success": true, 
+              "payload": allSnacks 
+            })
+          } else {
+          res.status(500).json({ error: "server error" });
+        }
+    }catch(err){
+        console.log(err)
+    }
 });
 
 snacks.get("/:id", async (req, res)=>{
@@ -38,15 +45,21 @@ snacks.post("/", async (req, res)=>{
 
     try{
         const createdSnack = await createSnack(body);
+        if(!createdSnack.name){
+            res.status(422).json({error: "Must include name field"})
+        }
         if(createdSnack.name && createdSnack.image){
             res.status(200).json({
                 "success":true,
                 "payload":createdSnack
             });
-        } else if(!createdSnack.name){
-            res.status(422).json({error: "Must include name in field"});
-        } else if(createdSnack.name && !createdSnack.image){
-            res.status(200).json({image: "https://dummyimage.com/400x400/6e6c6e/e9e9f5.png&text=No+Image"});
+        }   
+        if(createdSnack.name && !createdSnack.image){
+            res.status(200).json({
+                "success":true,
+                "payload": createdSnack
+        
+            });
         }
     } catch(err){
         console.log(err);

@@ -3,12 +3,22 @@ CREATE DATABASE snack_a_log;
 
 \c snack_a_log;
 
+-- CREATE TABLE snacks (
+--     id SERIAL PRIMARY KEY,
+--     name TEXT,
+--     fiber INTEGER,
+--     protein INTEGER,
+--     added_sugar INTEGER, 
+--     is_healthy BOOLEAN,
+--     image TEXT
+-- );
+
 CREATE TABLE snacks (
     id SERIAL PRIMARY KEY,
     name TEXT,
-    fiber NUMERIC,
-    protein NUMERIC,
-    added_sugar NUMERIC, 
+    fiber INTEGER,
+    protein INTEGER,
+    added_sugar INTEGER, 
     is_healthy BOOLEAN,
     image TEXT
 );
