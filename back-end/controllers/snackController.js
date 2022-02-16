@@ -1,18 +1,10 @@
 const express = require("express");
 const snacks = express.Router();
+const confirmHealth = require("../confirmHealth.js")
+const snackValidation = require("../snackValidation.js")
 
 const { getAllSnacks, getSnack, createSnack, deleteSnack, updateSnack}= require("../queries/snacks.js");
 
-
-// snacks.get("/", async (req, res) => {
-//   const allSnacks = await getAllSnacks();
-//   const snackTest = {success: true, payload:allSnacks}
-//   if (allSnacks[0]) {
-//     res.status(200).json(snackTest);
-//   } else {
-//     res.status(500).json({ error: "server error" });
-//   }
-// });
 
 
 snacks.get("/", async (req, res) => {
@@ -51,41 +43,27 @@ snacks.get("/:id", async (req, res)=>{
     }
 })
 
-// snacks.get("/:id", async (req, res)=>{
-//     const { id } = req.params;
-//     try{
-//         const snackId = await getSnackId
-//         if(snackId.id){
-//             res.status(200).json()
-//         }
-//     }
-// })
-
-
 
 snacks.post("/", async (req, res)=>{
     const { body } = req;
+    body.is_healthy = confirmHealth(body);
+    body.name = snackValidation(body);
 
     try{
-        const createdSnack = await createSnack(body);
-        if(!createdSnack.name){
-            res.status(422).json({error: "Must include name field"})
-        }
-        if(createdSnack.name && createdSnack.image){
+        const createdSnack = await createSnack(body)
+        if(createdSnack.id){
             res.status(200).json({
-                "success":true,
-                "payload":createdSnack
-            });
-        }   
-        if(createdSnack.name && !createdSnack.image){
-            res.status(200).json({
-                "success":true,
-                "payload": createdSnack 
-        
-            });
+                "success": true,
+                "payload": createdSnack
+            })
+        }else{
+            res.status(422).json({
+                "success": false,
+                "payload": "Must include name field"
+            })
         }
-    } catch(err){
-        console.log(err);
+    }catch(err){
+        console.log(err)
     }
 })
 
