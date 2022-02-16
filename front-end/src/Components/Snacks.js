@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import HeartHealth from "./HeartHealth";
 const API_URL = process.env.REACT_APP_API_URL;
+console.log(API_URL)
+
 
 function Snacks() {
   const [snacks, setSnacks] = useState([]);
@@ -12,6 +14,9 @@ function Snacks() {
       .then((res) => setSnacks(res.data.payload))
       .catch((e) => console(e));
   }, []);
+
+  console.log(snacks)
+
    return (
     <div className="Snacks">
       <article>
